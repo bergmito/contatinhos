@@ -1,0 +1,24 @@
+<ion-header>  
+  <ion-navbar>
+    <ion-title>{{ action }} Contact</ion-title>
+    <ion-buttons end *ngIf="!isNew">
+      <button ion-button (click)="delete()">
+          <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>  
+    <ion-list>
+        <ion-item>
+            <ion-label>Name</ion-label>
+            <ion-input text-right type="text" [(ngModel)]="contact.name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Phone</ion-label>
+            <ion-input text-right type="text" [(ngModel)]="contact.phone"></ion-input>
+        </ion-item>
+    </ion-list>
+    <button ion-button block (click)="save()">Save</button>
+</ion-content>
