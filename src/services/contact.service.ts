@@ -37,9 +37,8 @@ export class ContactsService {
 			change.doc.Date = new Date(change.doc.Date);
 			if (contact && contact._id === change.id) {
 				this._contacts[index] = change.doc;
-			} else {
-				this._contacts.splice(index, 0, change.doc)
-			}
+			} else
+				this._contacts.splice(index, 0, change.doc);
 		}
 	}
 
