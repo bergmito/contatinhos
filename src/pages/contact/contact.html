@@ -13,7 +13,7 @@
 
 <ion-content>  
     <ion-list inset>
-        <ion-item *ngFor="let contact of contacts" (click)="showDetail(contact)">
+        <ion-item *ngFor="let contact of contacts | async" (click)="showDetail(contact)">
           <div item-left>{{ contact.name }}</div>
           <div item-right>{{ contact.phone }}</div>
         </ion-item>

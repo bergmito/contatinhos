@@ -1,7 +1,10 @@
 import { Component }                 from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
+import { Store }                     from '@ngrx/store';
+
+import { AppState }                  from '../../services/app-state';
+import { ContactActions }            from '../../actions/contact.actions';
 import { Contact }                   from '../../interfaces/contact';
-import { ContactsService }           from '../../services/contact.service';
 
 @Component({
   selector: 'page-contact-details',
@@ -10,17 +13,19 @@ import { ContactsService }           from '../../services/contact.service';
 export class ContactDetailsPage {
 
     public contact: Contact = <Contact>{};
-    public isNew = true;
-    public action = 'Add';
+    public isNew: boolean = true;
+    public action: string = 'Add';
 
-    constructor(private viewCtrl: ViewController,
+    constructor(
+        private viewCtrl: ViewController,
         private navParams: NavParams,
-        private _contactService: ContactsService) {
-    }
+        private store: Store<AppState>,
+        private contactActions: ContactActions) { }
 
     ionViewDidLoad() {
         let editContact: Contact; 
         editContact = <Contact>this.navParams.get('contact');
+
         if (editContact) {
             this.contact = editContact;
             this.isNew = false;
@@ -29,19 +34,16 @@ export class ContactDetailsPage {
     }
 
     save() {
-        if (this.isNew) {
-            this._contactService.add(this.contact)
-                .catch(console.error.bind(console));
-        } else {
-            this._contactService.update(this.contact)
-                .catch(console.error.bind(console));
-        }
+        if (this.isNew)
+            this.store.dispatch(this.contactActions.addContact(this.contact))
+        else
+            this.store.dispatch(this.contactActions.updateContact(this.contact));
+
         this.dismiss();
     }
 
     delete() {
-        this._contactService.delete(this.contact)
-            .catch(console.error.bind(console));
+        this.store.dispatch(this.contactActions.deleteContact(this.contact));
 
         this.dismiss();
     }

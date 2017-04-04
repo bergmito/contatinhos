@@ -1,37 +1,28 @@
-import { Component, NgZone }                        from "@angular/core";  
-import { ModalController, NavController, Platform } from 'ionic-angular'; 
-import { ContactsService }                          from '../../services/contact.service';
-import { Contact }                                  from '../../interfaces/contact';  
-import { ContactDetailsPage }                       from '../../pages/contact-details/contact-details';
+import { Component, ChangeDetectionStrategy } from "@angular/core";  
+import { ModalController, NavController }     from 'ionic-angular'; 
+import { Store }                              from '@ngrx/store';
+import { Observable }                         from 'rxjs/Observable';
+import 'rxjs/Rx';
+
+import { AppState }                           from '../../services/app-state';
+import { Contact }                            from '../../interfaces/contact';  
+import { ContactDetailsPage }                 from '../../pages/contact-details/contact-details';
 
 @Component({
   selector: 'page-contact',
-  templateUrl: 'contact.html'
+  templateUrl: 'contact.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactPage {
 
-    public contacts = [];
+    public contacts: Observable<Contact[]>;
 
-    constructor(private _contactsService: ContactsService,
+    constructor(
         private nav: NavController,
-        private platform: Platform,
-        private zone: NgZone,
-        private modalCtrl: ModalController) {
-
-    }
-
-    ionViewDidLoad() {
-        this.platform.ready().then(() => {
-            this._contactsService.initDB();
-
-            this._contactsService.getAll()
-                .then(data => {
-                    this.zone.run(() => {
-                        this.contacts = data;
-                    });
-                })
-                .catch(console.error.bind(console));
-        });
+        private store: Store<AppState>,
+        private modalCtrl: ModalController) 
+    { 
+        this.contacts = this.store.select(state => state.contacts);
     }
 
     showDetail(contact: Contact) {
